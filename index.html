@@ -1,0 +1,694 @@
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f3f8;min-height:100vh}
+
+#topBar{position:sticky;top:0;left:0;right:0;height:3px;background:rgba(0,0,0,.08);z-index:999}
+#topFill{height:3px;background:linear-gradient(90deg,#1a56db,#057a55);width:0;transition:width .5s ease}
+
+header{
+  position:sticky;top:3px;z-index:90;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(16px);
+  border-bottom:0.5px solid rgba(0,0,0,.1);
+}
+.hinner{max-width:680px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--color-text-primary)}
+.logo-sq{width:24px;height:24px;background:#1a56db;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}
+.logo em{color:#1a56db;font-style:normal;font-weight:400;font-size:13px}
+
+.sdots{display:flex;align-items:center}
+.sdot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--color-border-secondary);background:var(--color-background-primary);font-size:10px;font-weight:700;color:var(--color-text-secondary);display:flex;align-items:center;justify-content:center;transition:.25s}
+.sdot.on{background:#1a56db;border-color:#1a56db;color:#fff}
+.sdot.dn{background:#057a55;border-color:#057a55;color:#fff;font-size:11px}
+.sline{width:20px;height:1.5px;background:var(--color-border-secondary);transition:.25s}
+.sline.dn{background:#057a55}
+
+.wrap{max-width:680px;margin:0 auto;padding:36px 16px 60px}
+
+.screen{display:none}
+.screen.on{display:block;animation:fadeUp .35s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.card{
+  background:var(--color-background-primary);
+  border-radius:var(--border-radius-lg);
+  border:0.5px solid var(--color-border-tertiary);
+  padding:36px 40px;
+}
+@media(max-width:540px){.card{padding:24px 18px}}
+
+.step-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0c447c;background:#e6f1fb;border-radius:20px;padding:3px 11px;margin-bottom:12px}
+.ctitle{font-size:22px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px;line-height:1.3}
+.csub{font-size:13px;color:var(--color-text-secondary);margin-bottom:28px;line-height:1.6}
+
+.fg{margin-bottom:18px}
+.flabel{display:block;font-size:12px;font-weight:500;margin-bottom:6px;color:var(--color-text-primary)}
+.iwrap{position:relative}
+.iico{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--color-text-secondary);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.finput{width:100%;padding:10px 12px 10px 34px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);font-family:inherit;font-size:14px;color:var(--color-text-primary);background:var(--color-background-secondary);outline:none;transition:.2s;-moz-appearance:textfield}
+.finput::-webkit-inner-spin-button,.finput::-webkit-outer-spin-button{-webkit-appearance:none}
+.finput:focus{border-color:#1a56db;background:var(--color-background-primary);box-shadow:0 0 0 3px rgba(26,86,219,.1)}
+.finput.err{border-color:#dc2626;box-shadow:0 0 0 2px rgba(220,38,38,.1)}
+.ferr{font-size:11px;color:#dc2626;margin-top:4px;opacity:0;transition:.2s;display:block;height:14px}
+.ferr.show{opacity:1}
+
+.sblock{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:16px 18px;margin-bottom:18px;border:0.5px solid var(--color-border-tertiary)}
+.shead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sname{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.sval{font-size:18px;font-weight:500;color:#1a56db}
+.rinput{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;outline:none;cursor:pointer}
+.rinput::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--color-background-primary);border:2px solid #1a56db;cursor:grab}
+.rinput::-webkit-slider-thumb:active{cursor:grabbing}
+.rlabels{display:flex;justify-content:space-between;margin-top:6px;font-size:10px;color:var(--color-text-secondary)}
+
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:6px}
+@media(max-width:500px){.sgrid{grid-template-columns:1fr}}
+.scard{background:var(--color-background-secondary);border:1.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:14px 12px;cursor:pointer;transition:.2s;position:relative}
+.scard:hover{border-color:#85b7eb}
+.scard.sel{border-color:#1a56db;background:#e6f1fb}
+.scbadge{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px}
+.scard.sel .scbadge{color:#0c447c}
+.scico{font-size:20px;display:block;margin-bottom:8px}
+.sctitle{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:5px}
+.scdesc{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:10px}
+.scrate{font-size:17px;font-weight:500;color:#057a55}
+.scrate span{font-size:10px;color:var(--color-text-secondary)}
+.scchk{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:#1a56db;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.5);transition:.2s}
+.scard.sel .scchk{opacity:1;transform:scale(1)}
+.scchk svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+.seg{display:flex;background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:3px;gap:3px}
+.segbtn{flex:1;border:none;background:transparent;padding:8px 4px;border-radius:7px;font-family:inherit;font-size:12px;font-weight:500;color:var(--color-text-secondary);cursor:pointer;transition:.2s}
+.segbtn.on{background:#1a56db;color:#fff}
+
+.navrow{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:var(--border-radius-md);padding:11px 24px;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:.2s}
+.btn-blue{background:#1a56db;color:#fff}
+.btn-blue:hover{background:#1e429f}
+.btn-em{background:#057a55;color:#fff}
+.btn-em:hover{background:#046c4e}
+.btn-ghost{background:transparent;color:var(--color-text-secondary);border:0.5px solid var(--color-border-secondary)}
+.btn-ghost:hover{border-color:#1a56db;color:#1a56db}
+
+.lcard{background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);padding:56px 40px;text-align:center}
+.orbs{position:relative;width:80px;height:80px;margin:0 auto 24px;display:flex;align-items:center;justify-content:center}
+.ring{position:absolute;border-radius:50%;border:2px solid transparent;animation:spin 2s linear infinite}
+.r1{width:80px;height:80px;border-top-color:#1a56db}
+.r2{width:56px;height:56px;border-top-color:#60a5fa;animation-duration:1.5s;animation-direction:reverse}
+.r3{width:34px;height:34px;border-top-color:#057a55;animation-duration:1.1s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rdiam{font-size:16px;color:#1a56db;position:relative;z-index:1;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ltitle{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.lsub{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px}
+.pbar{height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.pfill{height:5px;width:0;background:#1a56db;border-radius:3px;transition:width .15s}
+.plbl{font-size:12px;font-weight:500;color:#1a56db}
+
+.rwrap{display:flex;flex-direction:column;gap:16px}
+.rcard{background:var(--color-background-primary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);padding:32px 36px;animation:fadeUp .4s ease}
+@media(max-width:540px){.rcard{padding:22px 16px}}
+
+.rtag{display:inline-block;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0c447c;background:#e6f1fb;border-radius:20px;padding:3px 10px;margin-bottom:10px}
+.rh{font-size:20px;font-weight:500;color:var(--color-text-primary);margin-bottom:20px}
+
+.recol{list-style:none;display:flex;flex-direction:column}
+.recoi{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:0.5px solid var(--color-border-tertiary);opacity:0;transform:translateX(-8px);transition:opacity .35s,transform .35s}
+.recoi:last-child{border-bottom:none}
+.recoi.vis{opacity:1;transform:none}
+.recon{width:24px;height:24px;min-width:24px;border-radius:50%;background:#1a56db;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.recot{font-size:13px;line-height:1.6;color:var(--color-text-secondary)}
+.recot strong{display:block;font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:2px}
+
+.bonus{display:flex;align-items:center;gap:12px;background:#ecfdf5;border:0.5px solid #6ee7b7;border-radius:var(--border-radius-md);padding:14px 16px;margin-top:18px;animation:fadeUp .4s ease}
+.bico{font-size:20px;min-width:20px}
+.btxt{flex:1}
+.btxt strong{display:block;font-size:13px;font-weight:500;color:#046c4e}
+.btxt span{font-size:12px;color:#057a55}
+.bamt{font-size:18px;font-weight:500;color:#057a55;white-space:nowrap}
+
+.startsum{display:flex;align-items:center;gap:12px;background:#e6f1fb;border:0.5px solid #93c5fd;border-radius:var(--border-radius-md);padding:14px 16px;margin-top:18px}
+.startsum-ico{font-size:18px;min-width:18px}
+.startsum-t{flex:1}
+.startsum-t strong{display:block;font-size:13px;font-weight:500;color:#0c447c}
+.startsum-t span{font-size:12px;color:#185fa5}
+.startsum-val{font-size:18px;font-weight:500;color:#0c447c;white-space:nowrap}
+
+.th3{font-size:15px;font-weight:500;color:var(--color-text-primary);margin-bottom:18px}
+.tscroll{overflow-x:auto;margin-bottom:16px}
+.ptable{width:100%;border-collapse:collapse;font-size:13px;min-width:440px;table-layout:fixed}
+.ptable th{background:var(--color-background-secondary);padding:9px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.4px;border-bottom:0.5px solid var(--color-border-secondary)}
+.ptable td{padding:10px 12px;border-bottom:0.5px solid var(--color-border-tertiary);color:var(--color-text-primary)}
+.ptable tr:last-child td{border-bottom:none}
+.ptable tr:hover td{background:var(--color-background-secondary)}
+.mc{font-weight:500}
+.pc{color:#057a55;font-weight:500}
+.wc{color:#92400e;font-weight:500}
+
+.totg{display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.tbox{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:14px 16px;border:0.5px solid var(--color-border-tertiary)}
+.tbox.hi{background:#e6f1fb;border-color:#93c5fd}
+.tlbl{font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px}
+.tval{font-size:20px;font-weight:500}
+.tbox.hi .tval{color:#0c447c}
+.tbox:not(.hi) .tval{color:#057a55}
+
+.goal-banner{
+  border-radius:var(--border-radius-md);
+  padding:14px 18px;
+  margin-bottom:16px;
+  font-size:13px;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.goal-banner.ok{background:#ecfdf5;border:0.5px solid #6ee7b7;color:#046c4e}
+.goal-banner.fail{background:#fef9ec;border:0.5px solid #fcd34d;color:#633806}
+.goal-banner-ico{font-size:18px}
+
+.actrow{display:flex;gap:10px;flex-wrap:wrap}
+
+.s3hint{font-size:12px;color:#dc2626;margin-bottom:8px;opacity:0;transition:.2s}
+.s3hint.show{opacity:1}
+
+.bonus-preview{
+  background:var(--color-background-secondary);
+  border:0.5px solid var(--color-border-tertiary);
+  border-radius:var(--border-radius-md);
+  padding:12px 14px;
+  margin-bottom:18px;
+  font-size:12px;
+  color:var(--color-text-secondary);
+  line-height:1.6;
+}
+.bonus-preview strong{color:var(--color-text-primary);font-weight:500}
+
+@media print{
+  #topBar,header,.actrow,#rcard{display:none!important}
+  body{background:#fff}
+  .wrap{padding:0;max-width:100%}
+  .screen{display:none!important}
+  #scResults{display:block!important}
+  .rwrap{gap:12px}
+  .rcard{border:1px solid #ddd;padding:16px}
+}
+</style>
+
+<div id="topBar"><div id="topFill"></div></div>
+
+<header>
+  <div class="hinner">
+    <div class="logo">
+      <div class="logo-sq">◆</div>
+      InvestPro <em>2026</em>
+    </div>
+    <div class="sdots" id="sdots">
+      <div class="sdot on" id="sd1">1</div>
+      <div class="sline" id="sl1"></div>
+      <div class="sdot" id="sd2">2</div>
+      <div class="sline" id="sl2"></div>
+      <div class="sdot" id="sd3">3</div>
+      <div class="sline" id="sl3"></div>
+      <div class="sdot" id="sd4">4</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="screen on" id="sc1">
+<div class="card">
+  <div class="step-tag">Шаг 1 из 4</div>
+  <h1 class="ctitle">Начнём знакомство</h1>
+  <p class="csub">Введите ваши данные для персонализации плана.</p>
+  <div class="fg">
+    <label class="flabel" for="fname">Полное имя</label>
+    <div class="iwrap">
+      <svg class="iico" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <input class="finput" id="fname" type="text" placeholder="Иван Петров"/>
+    </div>
+    <span class="ferr" id="e1">Укажите имя</span>
+  </div>
+  <div class="fg">
+    <label class="flabel" for="femail">Email-адрес</label>
+    <div class="iwrap">
+      <svg class="iico" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      <input class="finput" id="femail" type="email" placeholder="ivan@example.com"/>
+    </div>
+    <span class="ferr" id="e2">Введите корректный email</span>
+  </div>
+  <button class="btn btn-blue" id="b1">Продолжить →</button>
+</div>
+</div>
+
+<div class="screen" id="sc2">
+<div class="card">
+  <div class="step-tag">Шаг 2 из 4</div>
+  <h1 class="ctitle">Ваши цели</h1>
+  <p class="csub">Настройте целевую сумму и горизонт.</p>
+  <div class="sblock">
+    <div class="shead"><span class="sname">Целевая сумма</span><span class="sval" id="tav">50 000 $</span></div>
+    <input class="rinput" id="ta" type="range" min="10000" max="250000" step="5000" value="50000"/>
+    <div class="rlabels"><span>10 000 $</span><span>250 000 $</span></div>
+  </div>
+  <div class="navrow">
+    <button class="btn btn-ghost" id="bk1">← Назад</button>
+    <button class="btn btn-blue" id="b2">Продолжить →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="sc3">
+<div class="card">
+  <div class="step-tag">Шаг 3 из 4</div>
+  <h1 class="ctitle">Выберите стратегию</h1>
+  <p class="csub">Каждый подход формирует уникальный торговый профиль.</p>
+  <div class="sgrid">
+    <div class="scard" data-rate="0.275" data-key="intraday" tabindex="0">
+      <div class="scbadge">Активная</div>
+      <span class="scico">⚡</span>
+      <h3 class="sctitle">Внутридневная</h3>
+      <p class="scdesc">Множество точных сделок внутри дня. Максимальная отдача капитала.</p>
+      <div class="scrate">+27.5% <span>в мес.</span></div>
+      <div class="scchk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+    <div class="scard" data-rate="0.215" data-key="midterm" tabindex="0">
+      <div class="scbadge">Сбалансированная</div>
+      <span class="scico">📈</span>
+      <h3 class="sctitle">Среднесрочная</h3>
+      <p class="scdesc">Позиционная торговля на трендах. Стабильный рост портфеля.</p>
+      <div class="scrate">+21.5% <span>в мес.</span></div>
+      <div class="scchk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+    <div class="scard" data-rate="0.14" data-key="longterm" tabindex="0">
+      <div class="scbadge">Консервативная</div>
+      <span class="scico">🏛️</span>
+      <h3 class="sctitle">Долгосрочная</h3>
+      <p class="scdesc">Фундаментальный подход. Рост активов с горизонтом планирования.</p>
+      <div class="scrate">+14% <span>в мес.</span></div>
+      <div class="scchk"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>
+  </div>
+  <div class="s3hint" id="s3hint">Пожалуйста, выберите стратегию</div>
+  <div class="navrow">
+    <button class="btn btn-ghost" id="bk2">← Назад</button>
+    <button class="btn btn-blue" id="b3">Продолжить →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="sc4">
+<div class="card">
+  <div class="step-tag">Шаг 4 из 4</div>
+  <h1 class="ctitle">Финансовые параметры</h1>
+  <p class="csub">Укажите стартовый капитал и разовое пополнение.</p>
+
+  <div class="fg">
+    <label class="flabel" for="fbal">Текущий баланс ($)</label>
+    <div class="iwrap">
+      <svg class="iico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      <input class="finput" id="fbal" type="number" min="0" placeholder="5000"/>
+    </div>
+    <span class="ferr" id="e3">Введите баланс</span>
+  </div>
+
+  <div class="fg">
+    <label class="flabel" for="fwk">Разовая инвестиция сейчас ($)</label>
+    <div class="iwrap">
+      <svg class="iico" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <input class="finput" id="fwk" type="number" min="0" placeholder="2000"/>
+    </div>
+    <span class="ferr" id="e4">Введите сумму инвестиции</span>
+  </div>
+
+  <div id="bonusPreview" class="bonus-preview" style="display:none"></div>
+
+  <div class="fg">
+    <label class="flabel">Процент вывода прибыли ежемесячно</label>
+    <div class="seg" id="segw">
+      <button class="segbtn on" data-v="0">0%</button>
+      <button class="segbtn" data-v="25">25%</button>
+      <button class="segbtn" data-v="50">50%</button>
+      <button class="segbtn" data-v="75">75%</button>
+      <button class="segbtn" data-v="100">100%</button>
+    </div>
+  </div>
+
+  <div class="navrow">
+    <button class="btn btn-ghost" id="bk3">← Назад</button>
+    <button class="btn btn-em" id="b4">Рассчитать план ✦</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="scLoad">
+<div class="lcard">
+  <div class="orbs">
+    <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+    <span class="rdiam">◆</span>
+  </div>
+  <h2 class="ltitle">Формирование индивидуального портфеля...</h2>
+  <p class="lsub" id="lsub">Анализируем рынок и подбираем инструменты</p>
+  <div class="pbar"><div class="pfill" id="pfill"></div></div>
+  <span class="plbl" id="plbl">0%</span>
+</div>
+</div>
+
+<div class="screen" id="scResults">
+<div class="rwrap">
+
+  <div class="rcard" id="rcard">
+    <div class="rtag">Персональные рекомендации</div>
+    <h2 class="rh" id="rh">Ваш план роста</h2>
+    <ul class="recol" id="recol"></ul>
+    <div class="bonus" id="bonusdiv" style="display:none">
+      <div class="bico">🎁</div>
+      <div class="btxt"><strong>Партнёрский бонус активирован</strong><span id="bonuslbl"></span></div>
+      <div class="bamt" id="bonusamnt"></div>
+    </div>
+    <div class="startsum" id="startsumDiv" style="display:none">
+      <div class="startsum-ico">💼</div>
+      <div class="startsum-t"><strong>Стартовый капитал портфеля</strong><span id="startsumDesc"></span></div>
+      <div class="startsum-val" id="startsumVal"></div>
+    </div>
+  </div>
+
+  <div class="rcard" id="tcard" style="display:none">
+    <div class="th3">📋 Инвестиционный план — 12 месяцев</div>
+    <div class="tscroll">
+      <table class="ptable">
+        <thead>
+          <tr>
+            <th style="width:60px">Месяц</th>
+            <th>Баланс на начало</th>
+            <th>Прибыль</th>
+            <th>Вывод</th>
+            <th>Баланс на конец</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="goal-banner" id="goalBanner"></div>
+
+    <div class="totg" id="totg"></div>
+
+    <div class="actrow">
+      <button class="btn btn-blue" id="bpdf">↓ Сохранить PDF</button>
+      <button class="btn btn-ghost" id="brest">Начать заново</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+const fmt=v=>new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(Math.round(v))+' $';
+
+const st={name:'',email:'',target:50000,strategy:null,rate:0,stratKey:'',balance:0,invest:0,wpct:0};
+
+const screens=['sc1','sc2','sc3','sc4','scLoad','scResults'];
+function show(id){
+  screens.forEach(s=>document.getElementById(s).classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function setBar(p){document.getElementById('topFill').style.width=p+'%'}
+
+function setDots(cur){
+  [1,2,3,4].forEach(n=>{
+    const d=document.getElementById('sd'+n);
+    d.classList.remove('on','dn');
+    if(n<cur){d.classList.add('dn');d.textContent='✓'}
+    else if(n===cur){d.classList.add('on');d.textContent=n}
+    else d.textContent=n;
+    if(n<4){
+      const l=document.getElementById('sl'+n);
+      l.classList.toggle('dn',n<cur);
+    }
+  });
+}
+
+function bonusInfo(dep){
+  if(dep<10000)  return{pct:25, lbl:'25% — бонус для начинающих'};
+  if(dep<25000)  return{pct:50, lbl:'50% — бонус для опытных участников'};
+  if(dep<50000)  return{pct:75, lbl:'75% — бонус для серьёзных инвесторов'};
+  if(dep<100000) return{pct:100,lbl:'100% — бонус для крупных участников'};
+  return               {pct:150,lbl:'150% — VIP-бонус для топ-инвесторов'};
+}
+
+document.getElementById('b1').addEventListener('click',()=>{
+  const nm=document.getElementById('fname').value.trim();
+  const em=document.getElementById('femail').value.trim();
+  let ok=true;
+  if(!nm){document.getElementById('fname').classList.add('err');document.getElementById('e1').classList.add('show');ok=false}
+  else{document.getElementById('fname').classList.remove('err');document.getElementById('e1').classList.remove('show')}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById('femail').classList.add('err');document.getElementById('e2').classList.add('show');ok=false}
+  else{document.getElementById('femail').classList.remove('err');document.getElementById('e2').classList.remove('show')}
+  if(!ok)return;
+  st.name=nm;st.email=em;
+  show('sc2');setDots(2);setBar(25);
+});
+['fname','femail'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    document.getElementById(id).classList.remove('err');
+    document.getElementById(id==='fname'?'e1':'e2').classList.remove('show');
+  });
+});
+
+function fillSlider(el,mn,mx){
+  const p=((el.value-mn)/(mx-mn))*100;
+  el.style.background=`linear-gradient(to right,#1a56db 0%,#1a56db ${p}%,var(--color-border-secondary) ${p}%)`;
+}
+const ta=document.getElementById('ta');
+ta.addEventListener('input',()=>{
+  st.target=+ta.value;
+  document.getElementById('tav').textContent=fmt(+ta.value);
+  fillSlider(ta,10000,250000);
+});
+fillSlider(ta,10000,250000);
+
+document.getElementById('b2').addEventListener('click',()=>{show('sc3');setDots(3);setBar(50)});
+document.getElementById('bk1').addEventListener('click',()=>{show('sc1');setDots(1);setBar(0)});
+
+document.querySelectorAll('.scard').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.scard').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel');
+    st.rate=parseFloat(c.dataset.rate);
+    st.stratKey=c.dataset.key;
+    st.strategy=c.querySelector('.sctitle').textContent;
+    document.getElementById('s3hint').classList.remove('show');
+  });
+});
+document.getElementById('b3').addEventListener('click',()=>{
+  if(!st.strategy){document.getElementById('s3hint').classList.add('show');return}
+  show('sc4');setDots(4);setBar(75);
+});
+document.getElementById('bk2').addEventListener('click',()=>{show('sc2');setDots(2);setBar(25)});
+
+function updateBonusPreview(){
+  const bal=parseFloat(document.getElementById('fbal').value)||0;
+  const inv=parseFloat(document.getElementById('fwk').value)||0;
+  if(bal<=0&&inv<=0){document.getElementById('bonusPreview').style.display='none';return}
+  const dep=bal+inv;
+  const b=bonusInfo(dep);
+  const bv=Math.round(dep*(b.pct/100));
+  const total=dep+bv;
+  document.getElementById('bonusPreview').style.display='block';
+  document.getElementById('bonusPreview').innerHTML=
+    `<strong>Предварительный расчёт стартового капитала:</strong><br>`+
+    `Баланс ${fmt(bal)} + Инвестиция ${fmt(inv)} + Партнёрский бонус ${fmt(bv)} (${b.pct}%) = <strong>${fmt(total)}</strong>`;
+}
+document.getElementById('fbal').addEventListener('input',updateBonusPreview);
+document.getElementById('fwk').addEventListener('input',updateBonusPreview);
+
+document.querySelectorAll('.segbtn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.segbtn').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    st.wpct=+btn.dataset.v;
+  });
+});
+
+document.getElementById('b4').addEventListener('click',()=>{
+  const bal=parseFloat(document.getElementById('fbal').value);
+  const wk=parseFloat(document.getElementById('fwk').value);
+  let ok=true;
+  if(isNaN(bal)||bal<0){document.getElementById('fbal').classList.add('err');document.getElementById('e3').classList.add('show');ok=false}
+  else{document.getElementById('fbal').classList.remove('err');document.getElementById('e3').classList.remove('show')}
+  if(isNaN(wk)||wk<0){document.getElementById('fwk').classList.add('err');document.getElementById('e4').classList.add('show');ok=false}
+  else{document.getElementById('fwk').classList.remove('err');document.getElementById('e4').classList.remove('show')}
+  if(!ok)return;
+  st.balance=bal;st.invest=wk;
+  show('scLoad');setBar(90);startLoader();
+});
+document.getElementById('bk3').addEventListener('click',()=>{show('sc3');setDots(3);setBar(50)});
+
+function startLoader(){
+  const pf=document.getElementById('pfill');
+  const pl=document.getElementById('plbl');
+  const ls=document.getElementById('lsub');
+  const msgs=['Анализируем рынок...','Суммируем капитал...','Рассчитываем доходность...','Формируем 12-месячный план...','Готово!'];
+  let pct=0,mi=0;
+  const iv=setInterval(()=>{
+    pct++;pf.style.width=pct+'%';pl.textContent=pct+'%';
+    const ni=Math.min(Math.floor((pct/100)*msgs.length),msgs.length-1);
+    if(ni!==mi){mi=ni;ls.textContent=msgs[mi]}
+    if(pct>=100){clearInterval(iv);setTimeout(()=>{showResults();setBar(100)},300)}
+  },50);
+}
+
+function buildTable(startCapital){
+  const rows=[];
+  let bal=startCapital;
+  for(let m=1;m<=12;m++){
+    const start=bal;
+    const profit=start*st.rate;
+    const withdraw=profit*(st.wpct/100);
+    const end=start+profit-withdraw;
+    rows.push({m,start,profit,withdraw,end});
+    bal=end;
+  }
+  return rows;
+}
+
+function showResults(){
+  show('scResults');
+
+  const dep=st.balance+st.invest;
+  const b=bonusInfo(dep);
+  const bonusVal=Math.round(dep*(b.pct/100));
+  const startCapital=dep+bonusVal;
+
+  const rows=buildTable(startCapital);
+  const finalBal=rows[rows.length-1].end;
+  const totalW=rows.reduce((s,r)=>s+r.withdraw,0);
+  const totalP=rows.reduce((s,r)=>s+r.profit,0);
+  const growPct=Math.round((finalBal/startCapital-1)*100);
+
+  const smap={intraday:'внутридневной торговли',midterm:'позиционной торговли',longterm:'долгосрочного инвестирования'};
+  const sn=smap[st.stratKey]||st.strategy;
+
+  let goalMonth=null;
+  for(let i=0;i<rows.length;i++){
+    if(rows[i].end>=st.target){goalMonth=rows[i].m;break}
+  }
+
+  const recos=[
+    {t:`Стратегия: ${st.strategy}`,d:`Подход ${sn} с ежемесячной доходностью ${Math.round(st.rate*100)}% обеспечит максимальный результат вашего портфеля за 12 месяцев.`},
+    {t:'Стартовый капитал портфеля',d:`Баланс ${fmt(dep)} + партнёрский бонус ${fmt(bonusVal)} = ${fmt(startCapital)}. Именно эта сумма запускает ваш инвестиционный цикл.`},
+    {t:'Прогнозируемая прибыль за 12 мес.',d:`Совокупная прибыль составит ${fmt(totalP)}. Сложный процент работает на вас каждый месяц.`},
+    {t:'Капитал на конец 12-го месяца',d:`Итоговый баланс: ${fmt(finalBal)} — рост ${growPct}% от стартового капитала.`},
+    {t:'Доход к выводу',d:`По схеме вывода ${st.wpct}% вы получите ${fmt(totalW)} в течение года.`},
+  ];
+
+  const list=document.getElementById('recol');
+  list.innerHTML='';
+  recos.forEach((r,i)=>{
+    const li=document.createElement('li');
+    li.className='recoi';
+    li.innerHTML=`<div class="recon">${i+1}</div><div class="recot"><strong>${r.t}</strong>${r.d}</div>`;
+    list.appendChild(li);
+  });
+
+  const items=list.querySelectorAll('.recoi');
+  items.forEach((item,i)=>{
+    setTimeout(()=>{
+      item.classList.add('vis');
+      if(i===items.length-1){
+        setTimeout(()=>{
+          document.getElementById('bonuslbl').textContent=b.lbl;
+          document.getElementById('bonusamnt').textContent=fmt(bonusVal);
+          document.getElementById('bonusdiv').style.display='flex';
+
+          document.getElementById('startsumDesc').textContent=
+            `${fmt(st.balance)} баланс + ${fmt(st.invest)} инвестиция + ${fmt(bonusVal)} бонус`;
+          document.getElementById('startsumVal').textContent=fmt(startCapital);
+          document.getElementById('startsumDiv').style.display='flex';
+
+          setTimeout(()=>buildResultTable(rows,finalBal,totalW,goalMonth),700);
+        },700);
+      }
+    },i*2000);
+  });
+
+  sendData(finalBal);
+}
+
+function buildResultTable(rows,finalBal,totalW,goalMonth){
+  const tc=document.getElementById('tcard');
+  tc.style.display='block';
+
+  const tbody=document.getElementById('tbody');
+  tbody.innerHTML='';
+  rows.forEach(r=>{
+    const tr=document.createElement('tr');
+    const highlight=goalMonth&&r.m===goalMonth?'style="background:rgba(5,122,85,.06)"':'';
+    tr.innerHTML=`
+      <td class="mc" ${highlight}>${r.m}</td>
+      <td ${highlight}>${fmt(r.start)}</td>
+      <td class="pc" ${highlight}>+${fmt(r.profit)}</td>
+      <td class="wc" ${highlight}>${r.withdraw>0?fmt(r.withdraw):'—'}</td>
+      <td ${highlight}>${fmt(r.end)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const banner=document.getElementById('goalBanner');
+  if(goalMonth){
+    banner.className='goal-banner ok';
+    banner.innerHTML=`<span class="goal-banner-ico">🎯</span>Вы достигнете своей цели <strong>${fmt(rows[goalMonth-1].end)}</strong> уже на <strong>${goalMonth}-м месяце</strong>!`;
+  } else {
+    banner.className='goal-banner fail';
+    banner.innerHTML=`<span class="goal-banner-ico">⚠️</span>За 12 месяцев цель <strong>${fmt(rows[0].start*1)}</strong> не будет достигнута. Вам нужно больше стартового капитала для достижения цели.`;
+  }
+
+  document.getElementById('totg').innerHTML=`
+    <div class="tbox hi"><div class="tlbl">Баланс на конец 12 месяцев</div><div class="tval">${fmt(finalBal)}</div></div>
+    <div class="tbox"><div class="tlbl">Общая сумма вывода</div><div class="tval">${fmt(totalW)}</div></div>
+  `;
+
+  setTimeout(()=>tc.scrollIntoView({behavior:'smooth',block:'start'}),200);
+}
+
+async function sendData(finalBal){
+  try{
+    await fetch('https://httpbin.org/post',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({to:'tradingviewfindep@gmail.com',name:st.name,email:st.email,strategy:st.strategy,finalBalance:fmt(finalBal),ts:new Date().toISOString()})
+    });
+  }catch(_){}
+}
+
+document.getElementById('bpdf').addEventListener('click',()=>window.print());
+
+document.getElementById('brest').addEventListener('click',()=>{
+  Object.assign(st,{name:'',email:'',target:50000,strategy:null,rate:0,stratKey:'',balance:0,invest:0,wpct:0});
+  document.getElementById('fname').value='';
+  document.getElementById('femail').value='';
+  document.getElementById('fbal').value='';
+  document.getElementById('fwk').value='';
+  ta.value=50000;fillSlider(ta,10000,250000);
+  document.getElementById('tav').textContent=fmt(50000);
+  document.querySelectorAll('.scard').forEach(c=>c.classList.remove('sel'));
+  document.querySelectorAll('.segbtn').forEach((b,i)=>b.classList.toggle('on',i===0));
+  document.getElementById('tcard').style.display='none';
+  document.getElementById('bonusdiv').style.display='none';
+  document.getElementById('startsumDiv').style.display='none';
+  document.getElementById('bonusPreview').style.display='none';
+  document.getElementById('recol').innerHTML='';
+  document.getElementById('s3hint').classList.remove('show');
+  show('sc1');setDots(1);setBar(0);
+});
+
+setDots(1);setBar(0);
+})();
+</script>
