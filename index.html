@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Инвестиционный калькулятор 2026</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- PROGRESS BAR -->
+  <div class="top-progress" id="topProgress">
+    <div class="top-progress-fill" id="topProgressFill"></div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-mark">◆</span>
+        <span class="logo-text">InvestPro <em>2026</em></span>
+      </div>
+      <div class="step-indicator" id="stepIndicator">
+        <span class="step-dot active" data-step="1"></span>
+        <span class="step-line"></span>
+        <span class="step-dot" data-step="2"></span>
+        <span class="step-line"></span>
+        <span class="step-dot" data-step="3"></span>
+        <span class="step-line"></span>
+        <span class="step-dot" data-step="4"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-container">
+
+    <!-- ═══════════════════════════════════════
+         STEP 1 — Личные данные
+    ═══════════════════════════════════════ -->
+    <section class="step-screen active" id="step1">
+      <div class="screen-card">
+        <div class="card-label">Шаг 1 из 4</div>
+        <h1 class="card-title">Начнём знакомство</h1>
+        <p class="card-sub">Введите ваши данные, чтобы мы могли персонализировать план.</p>
+
+        <div class="field-group">
+          <label class="field-label" for="fullName">Полное имя</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input class="field-input" id="fullName" type="text" placeholder="Иван Петров" autocomplete="name" />
+          </div>
+          <span class="field-error" id="nameError">Пожалуйста, укажите имя</span>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="email">Email</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <input class="field-input" id="email" type="email" placeholder="ivan@example.com" autocomplete="email" />
+          </div>
+          <span class="field-error" id="emailError">Введите корректный email</span>
+        </div>
+
+        <button class="btn-primary" id="btn1">Продолжить →</button>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         STEP 2 — Цели
+    ═══════════════════════════════════════ -->
+    <section class="step-screen" id="step2">
+      <div class="screen-card">
+        <div class="card-label">Шаг 2 из 4</div>
+        <h1 class="card-title">Ваши цели</h1>
+        <p class="card-sub">Настройте параметры под ваш инвестиционный горизонт.</p>
+
+        <div class="slider-block">
+          <div class="slider-header">
+            <span class="slider-name">Целевая сумма</span>
+            <span class="slider-value" id="targetAmountVal">50 000 $</span>
+          </div>
+          <div class="slider-track-wrap">
+            <input class="range-input" id="targetAmount" type="range" min="10000" max="250000" step="5000" value="50000" />
+            <div class="range-labels">
+              <span>10 000 $</span><span>250 000 $</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="slider-block">
+          <div class="slider-header">
+            <span class="slider-name">Срок инвестирования</span>
+            <span class="slider-value" id="termVal">6 мес.</span>
+          </div>
+          <div class="slider-track-wrap">
+            <input class="range-input" id="termMonths" type="range" min="1" max="12" step="1" value="6" />
+            <div class="range-labels">
+              <span>1 мес.</span><span>12 мес.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nav-row">
+          <button class="btn-ghost" id="back1">← Назад</button>
+          <button class="btn-primary" id="btn2">Продолжить →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         STEP 3 — Стратегия
+    ═══════════════════════════════════════ -->
+    <section class="step-screen" id="step3">
+      <div class="screen-card">
+        <div class="card-label">Шаг 3 из 4</div>
+        <h1 class="card-title">Выберите стратегию</h1>
+        <p class="card-sub">Каждый подход формирует уникальный торговый профиль.</p>
+
+        <div class="strategy-grid">
+
+          <div class="strategy-card" data-rate="0.275" data-key="intraday" tabindex="0">
+            <div class="strategy-badge">Активная</div>
+            <div class="strategy-icon">⚡</div>
+            <h3 class="strategy-title">Внутридневная</h3>
+            <p class="strategy-desc">Множество точных сделок внутри дня. Максимальная отдача капитала.</p>
+            <div class="strategy-rate">+27.5% <span>в мес.</span></div>
+            <div class="strategy-check">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+
+          <div class="strategy-card" data-rate="0.215" data-key="midterm" tabindex="0">
+            <div class="strategy-badge">Сбалансированная</div>
+            <div class="strategy-icon">📈</div>
+            <h3 class="strategy-title">Среднесрочная</h3>
+            <p class="strategy-desc">Позиционная торговля на трендах. Стабильный рост портфеля.</p>
+            <div class="strategy-rate">+21.5% <span>в мес.</span></div>
+            <div class="strategy-check">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+
+          <div class="strategy-card" data-rate="0.14" data-key="longterm" tabindex="0">
+            <div class="strategy-badge">Консервативная</div>
+            <div class="strategy-icon">🏛️</div>
+            <h3 class="strategy-title">Долгосрочная</h3>
+            <p class="strategy-desc">Фундаментальный подход. Рост активов с горизонтом планирования.</p>
+            <div class="strategy-rate">+14% <span>в мес.</span></div>
+            <div class="strategy-check">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="nav-row">
+          <button class="btn-ghost" id="back2">← Назад</button>
+          <button class="btn-primary" id="btn3" disabled>Продолжить →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         STEP 4 — Финансы
+    ═══════════════════════════════════════ -->
+    <section class="step-screen" id="step4">
+      <div class="screen-card">
+        <div class="card-label">Шаг 4 из 4</div>
+        <h1 class="card-title">Финансовые параметры</h1>
+        <p class="card-sub">Последний шаг — и ваш персональный план готов.</p>
+
+        <div class="field-group">
+          <label class="field-label" for="balance">Текущий баланс ($)</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <input class="field-input" id="balance" type="number" min="0" placeholder="5 000" />
+          </div>
+          <span class="field-error" id="balanceError">Введите баланс</span>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="weekly">Еженедельное пополнение ($)</label>
+          <div class="input-wrap">
+            <svg class="input-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <input class="field-input" id="weekly" type="number" min="0" placeholder="500" />
+          </div>
+          <span class="field-error" id="weeklyError">Введите сумму пополнения</span>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Процент вывода прибыли</label>
+          <div class="segmented" id="withdrawPct">
+            <button class="seg-btn active" data-val="0">0%</button>
+            <button class="seg-btn" data-val="25">25%</button>
+            <button class="seg-btn" data-val="50">50%</button>
+            <button class="seg-btn" data-val="75">75%</button>
+            <button class="seg-btn" data-val="100">100%</button>
+          </div>
+        </div>
+
+        <div class="nav-row">
+          <button class="btn-ghost" id="back3">← Назад</button>
+          <button class="btn-primary btn-accent" id="btn4">Рассчитать план ✦</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         LOADER
+    ═══════════════════════════════════════ -->
+    <section class="step-screen" id="stepLoader">
+      <div class="loader-card">
+        <div class="loader-orb">
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+          <div class="orb-ring r3"></div>
+          <span class="orb-icon">◆</span>
+        </div>
+        <h2 class="loader-title">Формирование индивидуального портфеля...</h2>
+        <p class="loader-sub">Анализируем рынок и подбираем оптимальные инструменты</p>
+        <div class="progress-bar-wrap">
+          <div class="progress-bar-fill" id="loaderBar"></div>
+        </div>
+        <span class="progress-label" id="loaderLabel">0%</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         RESULTS
+    ═══════════════════════════════════════ -->
+    <section class="step-screen" id="stepResults">
+      <div class="results-wrapper">
+
+        <!-- Recommendations -->
+        <div class="results-card reco-card" id="recoCard">
+          <div class="reco-header">
+            <span class="reco-tag">Персональные рекомендации</span>
+            <h2 class="reco-title" id="recoTitle">Ваш план роста</h2>
+          </div>
+          <ul class="reco-list" id="recoList"></ul>
+
+          <!-- Bonus block -->
+          <div class="bonus-block" id="bonusBlock" style="display:none">
+            <div class="bonus-icon">🎁</div>
+            <div class="bonus-text">
+              <strong>Партнёрский бонус активирован</strong>
+              <span id="bonusDesc"></span>
+            </div>
+            <div class="bonus-amount" id="bonusAmount"></div>
+          </div>
+        </div>
+
+        <!-- Table plan -->
+        <div class="results-card table-card" id="tableCard" style="display:none">
+          <h3 class="table-heading">📋 Инвестиционный план по месяцам</h3>
+          <div class="table-scroll">
+            <table class="plan-table" id="planTable">
+              <thead>
+                <tr>
+                  <th>Месяц</th>
+                  <th>Баланс на начало</th>
+                  <th>Прибыль</th>
+                  <th>Вывод</th>
+                  <th>Баланс на конец</th>
+                </tr>
+              </thead>
+              <tbody id="planBody"></tbody>
+            </table>
+          </div>
+
+          <div class="totals-grid" id="totalsGrid"></div>
+
+          <div class="actions-row">
+            <button class="btn-primary" id="btnPdf">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Сохранить PDF
+            </button>
+            <button class="btn-ghost" id="btnRestart">Начать заново</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Print watermark -->
+  <div class="print-watermark">InvestPro 2026 — Персональный инвестиционный план</div>
+
+  <script src="script.js"></script>
+</body>
+</html>
