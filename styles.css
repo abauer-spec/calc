@@ -582,7 +582,7 @@ body {
 @media (min-width: 480px) {
   .card { padding: 36px 36px 40px; }
   .card-title { font-size: 40px; }
-  .strat-grid { flex-direction: row; }
+  /* .strat-grid { flex-direction: row; } */
   .strat-card { flex: 1; }
   .action-row { flex-direction: row; }
 }
