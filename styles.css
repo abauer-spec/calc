@@ -19,8 +19,10 @@
   --border:    #e2e8f0;
   --radius:    18px;
   --radius-sm: 12px;
-  --font:      'DM Sans', system-ui, sans-serif;
-  --font-head: 'Syne', system-ui, sans-serif;
+  /* --font:      'DM Sans', system-ui, sans-serif;
+  --font-head: 'Syne', system-ui, sans-serif; */
+   --font:      'Helvetica Neue', Helvetica, Arial, sans-serif;
+   --font-head: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
