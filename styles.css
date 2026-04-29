@@ -318,7 +318,10 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 .btn-primary {
-  background: var(--blue); color: #fff; width: 100%; justify-content: center;
+  background: var(--blue); 
+   color: #fff; 
+   /* width: 100%;  */
+   justify-content: center;
 }
 .btn-primary:hover { background: var(--blue-dk); }
 .btn-primary:active { transform: scale(0.98); }
