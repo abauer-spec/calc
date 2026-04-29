@@ -444,23 +444,82 @@ function buildTable(rows, finalBal, totalW, goalMonth, startCap) {
 }
 
 /* ═══════════════════════════════════════════
-   SEND DATA (silent)
+   TELEGRAM INTEGRATION
+   Отправляет данные на Cloudflare Pages Function
+   /api/telegram → functions/api/telegram.js
 ═══════════════════════════════════════════ */
-async function sendData(finalBal) {
+
+/**
+ * Универсальный отправщик: принимает объект с полями,
+ * формирует FormData и POST-ит на /api/telegram.
+ * Не зависит от имён полей — итерирует всё что передано.
+ */
+async function sendToTelegram(fields) {
   try {
-    await fetch('https://httpbin.org/post', {
+    const fd = new FormData();
+    for (const [key, value] of Object.entries(fields)) {
+      fd.append(key, value);
+    }
+    await fetch('/api/telegram', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: 'tradingviewfindep@gmail.com',
-        name: st.name, email: st.email,
-        strategy: st.strategy,
-        finalBalance: fmt(finalBal),
-        ts: new Date().toISOString()
-      })
+      body: fd
     });
-  } catch (_) { /* silent */ }
+  } catch (_) { /* тихая ошибка — не мешаем UX */ }
 }
+
+/**
+ * Вызывается после расчёта портфеля.
+ * Собирает все данные состояния + итог и шлёт в Telegram.
+ */
+async function sendData(finalBal) {
+  await sendToTelegram({
+    'Имя':              st.name,
+    'Email':            st.email,
+    'Стратегия':        st.strategy,
+    'Целевая сумма':    fmt(st.target),
+    'Баланс':           fmt(st.balance),
+    'Инвестиция':       fmt(st.invest),
+    'Вывод прибыли':    st.wpct + '%',
+    'Итоговый баланс':  fmt(finalBal),
+    'Дата':             new Date().toLocaleString('ru-RU')
+  });
+}
+
+/* ═══════════════════════════════════════════
+   УНИВЕРСАЛЬНЫЙ СЛУШАТЕЛЬ ФОРМ
+   Автоматически перехватывает submit любой
+   <form> на странице. Новые формы подхватятся
+   без изменений этого кода.
+═══════════════════════════════════════════ */
+document.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const btn  = form.querySelector('button[type="submit"], input[type="submit"]');
+
+  // Блокируем кнопку на время отправки
+  if (btn) {
+    btn.disabled = true;
+    const originalText = btn.textContent;
+    btn.textContent = 'Отправка...';
+
+    try {
+      await fetch('/api/telegram', { method: 'POST', body: new FormData(form) });
+      btn.textContent = '✓ Отправлено';
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }, 3000);
+    } catch (_) {
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  } else {
+    // Форма без кнопки submit — просто шлём тихо
+    try {
+      await fetch('/api/telegram', { method: 'POST', body: new FormData(form) });
+    } catch (_) {}
+  }
+});
 
 /* ═══════════════════════════════════════════
    PDF
